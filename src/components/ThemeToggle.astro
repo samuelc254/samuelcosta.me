@@ -1,0 +1,58 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<button 
+  id="theme-toggle" 
+  class="fixed top-6 right-6 z-50 w-12 h-12 rounded-xl bg-app-card-light dark:bg-app-card-dark border-1 border-app-border-light dark:border-app-border-dark flex items-center justify-center text-slate-600 dark:text-slate-400 hover:border-p-mint-light dark:hover:border-p-mint-dark hover:text-p-mint-light dark:hover:text-p-mint-dark shadow-xl backdrop-blur-md transition-colors duration-300 group"
+  aria-label="Toggle Theme"
+>
+  <span class="relative block w-5 h-5 overflow-hidden isolate pointer-events-none">
+    <Icon name="lucide:sun" class="absolute inset-0 w-5 h-5 transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out opacity-100 rotate-0 scale-100 dark:opacity-0 dark:rotate-45 dark:scale-75" />
+    <Icon name="lucide:moon" class="absolute inset-0 w-5 h-5 transform-gpu will-change-transform transition-[opacity,transform] duration-300 ease-out opacity-0 -rotate-45 scale-75 dark:opacity-100 dark:rotate-0 dark:scale-100" />
+  </span>
+</button>
+
+<script is:inline>
+  function applyTheme() {
+    const theme = (() => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    })();
+    
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+    
+    window.localStorage.setItem('theme', theme);
+  }
+
+  // Run on initial load
+  applyTheme();
+
+  // Re-run on Astro page transitions
+  document.addEventListener('astro:after-swap', applyTheme);
+
+  const handleToggleClick = () => {
+    const element = document.documentElement;
+    element.classList.toggle("dark");
+    
+    const isDark = element.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const toggle = document.getElementById("theme-toggle");
+    if (toggle) {
+        toggle.removeEventListener("click", handleToggleClick);
+        toggle.addEventListener("click", handleToggleClick);
+    }
+  });
+</script>

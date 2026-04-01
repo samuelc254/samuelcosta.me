@@ -1,0 +1,51 @@
+---
+const { post, class: className = '' } = Astro.props;
+const { title, description, category, tags, accentColor } = post.data;
+
+const accentClass = {
+  mint: 'border-p-mint-light/30 dark:border-p-mint-dark/30 hover:border-p-mint-light dark:hover:border-p-mint-dark shadow-p-mint-light/10 dark:shadow-p-mint-dark/10',
+  amber: 'border-p-amber-light/30 dark:border-p-amber-dark/30 hover:border-p-amber-light dark:hover:border-p-amber-dark shadow-p-amber-light/10 dark:shadow-p-amber-dark/10',
+  blue: 'border-p-blue-light/30 dark:border-p-blue-dark/30 hover:border-p-blue-light dark:hover:border-p-blue-dark shadow-p-blue-light/10 dark:shadow-p-blue-dark/10',
+  peach: 'border-p-peach-light/30 dark:border-p-peach-dark/30 hover:border-p-peach-light dark:hover:border-p-peach-dark shadow-p-peach-light/10 dark:shadow-p-peach-dark/10',
+}[accentColor as 'mint' | 'amber' | 'blue' | 'peach'] || 'border-app-border-light dark:border-app-border-dark';
+
+const textAccentClass = {
+  mint: 'text-p-mint-light dark:text-p-mint-dark',
+  amber: 'text-p-amber-light dark:text-p-amber-dark',
+  blue: 'text-p-blue-light dark:text-p-blue-dark',
+  peach: 'text-p-peach-light dark:text-p-peach-dark',
+}[accentColor as 'mint' | 'amber' | 'blue' | 'peach'] || 'text-slate-900 dark:text-slate-100';
+---
+
+<div class={`group cursor-pointer ${className}`}>
+  <a href={`/posts/${post.slug}`} class="block outline-none focus-visible:ring-2 focus-visible:ring-p-mint-light dark:focus-visible:ring-p-mint-dark rounded-2xl">
+    <article class={`relative bg-app-card-light dark:bg-app-card-dark border-1 rounded-2xl p-7 md:p-8 transition-all duration-500 ease-out transform group-hover:-translate-y-1 ${accentClass} hover:shadow-2xl overflow-hidden`}>
+      
+      <header class="flex justify-between items-start mb-5">
+        <span class={`font-mono text-[10px] uppercase tracking-[0.2em] bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md border-1 border-slate-200 dark:border-slate-800 ${textAccentClass}`}>
+          {category}
+        </span>
+        <div class="flex gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+          <div class="w-1.5 h-1.5 bg-slate-400 dark:bg-slate-600 rounded-full"></div>
+          <div class="w-1.5 h-1.5 bg-slate-400 dark:bg-slate-600 rounded-full"></div>
+        </div>
+      </header>
+      
+      <h2 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3 transition-colors leading-snug tracking-tight">
+        {title}
+      </h2>
+      
+      <p class="text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed line-clamp-4">
+        {description}
+      </p>
+      
+      <footer class="flex flex-wrap gap-2 pt-4 border-t border-slate-100 dark:border-slate-800/50">
+        {tags.map((tag: string) => (
+          <span class="text-[10px] font-mono text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
+            {tag}
+          </span>
+        ))}
+      </footer>
+    </article>
+  </a>
+</div>

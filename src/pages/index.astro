@@ -1,0 +1,143 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import BentoHeader from '../components/BentoHeader.astro';
+import PostCard from '../components/PostCard.astro';
+
+const posts = await getCollection('posts');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const BATCH_SIZE = 12;
+---
+
+<Layout title="Samuel Costa // Software Engineer">
+	<main class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 md:py-24 z-10 relative">
+		
+		<BentoHeader />
+		
+		<div class="mt-12 mb-6">
+			<div class="flex items-center gap-3 mb-10 px-2">
+				<div class="w-2 h-2 rounded-full bg-p-blue-light dark:bg-p-blue-dark shadow-[0_0_8px_rgba(7,89,133,0.3)] dark:shadow-[0_0_8px_rgba(186,230,253,0.6)] animate-pulse"></div>
+				<h2 class="font-mono text-[10px] text-p-blue-light dark:text-p-blue-dark uppercase tracking-[0.3em] font-bold">Stream.Logs</h2>
+				<div class="flex-grow h-px bg-gradient-to-r from-slate-200 dark:from-slate-800 to-transparent ml-6"></div>
+			</div>
+			
+			<div id="masonry-feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{sortedPosts.map((post, index) => (
+					<PostCard 
+						post={post} 
+						class={`feed-item transition-all duration-500 hidden opacity-0 scale-95`} 
+						data-index={index}
+					/>
+				))}
+			</div>
+		</div>
+
+		<div id="loader" class="flex flex-col items-center justify-center py-20 transition-opacity duration-500">
+			<div id="loader-spinner" class="w-6 h-6 border-2 border-slate-300 dark:border-slate-700 border-t-p-mint-light dark:border-t-p-mint-dark rounded-full animate-spin mb-4"></div>
+			<div id="loader-text" class="font-mono text-[10px] text-slate-400 dark:text-slate-500 tracking-[0.2em] uppercase font-medium">Awaiting_Signal...</div>
+		</div>
+	</main>
+
+	<script>
+		document.addEventListener('astro:page-load', () => {
+			if (window.location.pathname !== '/') return;
+
+			const BATCH_SIZE = 12;
+			const SCROLL_STATE_KEY = 'samuelcosta-scroll-y';
+			const loader = document.getElementById('loader');
+			const loaderSpinner = document.getElementById('loader-spinner');
+			const loaderText = document.getElementById('loader-text');
+			const items = Array.from(document.querySelectorAll('.feed-item'));
+			let loadedCount = 0;
+			const savedScrollY = Number(sessionStorage.getItem(SCROLL_STATE_KEY) || '0');
+			const shouldRestoreScroll = Number.isFinite(savedScrollY) && savedScrollY > 0;
+
+			if ('scrollRestoration' in history) {
+				history.scrollRestoration = 'manual';
+			}
+
+			if (!loader) return;
+
+			const waitForLayout = () => new Promise((resolve) => {
+				requestAnimationFrame(() => requestAnimationFrame(resolve));
+			});
+
+			const revealBatch = () => {
+				const nextBatch = items.slice(loadedCount, loadedCount + BATCH_SIZE);
+				nextBatch.forEach((item, idx) => {
+					item.classList.remove('hidden');
+					setTimeout(() => {
+						item.classList.remove('opacity-0', 'scale-95');
+						item.classList.add('opacity-100', 'scale-100');
+					}, idx * 40);
+				});
+				loadedCount += nextBatch.length;
+			};
+
+			const updateLoaderState = () => {
+				if (loadedCount >= items.length) {
+					if (loaderSpinner) loaderSpinner.style.display = 'none';
+					if (loaderText) {
+						loaderText.textContent = 'COMMUNICATION_STARTED';
+						loaderText.classList.replace('text-slate-400', 'text-p-mint-light');
+						loaderText.classList.add('dark:text-p-mint-dark');
+					}
+					loader.classList.remove('opacity-0');
+					loader.classList.add('opacity-100');
+				} else {
+					if (loaderSpinner) loaderSpinner.style.display = '';
+					if (loaderText) loaderText.textContent = 'Awaiting_Signal...';
+				}
+			};
+
+			items.forEach((item) => {
+				const link = item.querySelector('a');
+				if (!link) return;
+
+				link.addEventListener('click', () => {
+					sessionStorage.setItem(SCROLL_STATE_KEY, window.scrollY.toString());
+				}, { passive: true });
+			});
+
+			const observer = new IntersectionObserver((entries) => {
+				if (entries[0].isIntersecting) {
+					if (loadedCount >= items.length) {
+						observer.disconnect();
+						return;
+					}
+
+					loader.classList.remove('opacity-0');
+					loader.classList.add('opacity-100');
+					
+					setTimeout(() => {
+						revealBatch();
+						updateLoaderState();
+					}, 400);
+				}
+			}, { rootMargin: '200px' });
+
+			const restoreOrStartFeed = async () => {
+				revealBatch();
+				updateLoaderState();
+
+				if (shouldRestoreScroll) {
+					while (loadedCount < items.length && document.documentElement.scrollHeight < savedScrollY + window.innerHeight) {
+						revealBatch();
+						updateLoaderState();
+						await waitForLayout();
+					}
+
+					await waitForLayout();
+					window.scrollTo(0, savedScrollY);
+					sessionStorage.removeItem(SCROLL_STATE_KEY);
+				}
+
+				if (loadedCount < items.length) {
+					observer.observe(loader);
+				}
+			};
+
+			restoreOrStartFeed();
+		});
+	</script>
+</Layout>

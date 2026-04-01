@@ -1,0 +1,86 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+  
+  <!-- HERO (2x2) -->
+  <article class="md:col-span-2 md:row-span-2 p-8 md:p-10 bg-app-card-light dark:bg-app-card-dark border-1 border-app-border-light dark:border-app-border-dark rounded-2xl flex flex-col justify-between shadow-lg relative overflow-hidden group">
+    <!-- Decorative glow -->
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-p-mint-light/5 dark:bg-p-mint-dark/10 rounded-full blur-3xl group-hover:bg-p-mint-light/10 dark:group-hover:bg-p-mint-dark/20 transition-all duration-700"></div>
+    
+    <div>
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-2 h-2 rounded-full bg-p-mint-light dark:bg-p-mint-dark shadow-[0_0_8px_rgba(6,95,70,0.4)] dark:shadow-[0_0_8px_rgba(167,243,208,0.8)] animate-pulse"></div>
+        <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">System.Identity</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-slate-100 tracking-tight">
+        Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-p-mint-light dark:from-p-mint-dark to-p-blue-light dark:to-p-blue-dark">Samuel Costa</span>.
+      </h1>
+      
+      <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-2 max-w-md leading-relaxed">
+        Software Engineer specialized in <strong class="text-slate-900 dark:text-slate-200 font-medium">Firmware</strong>, <strong class="text-slate-900 dark:text-slate-200 font-medium">Embedded Systems</strong>, and high-fidelity industrial simulation engines.
+      </p>
+    </div>
+  </article>
+
+  <!-- STACK (2x1) -->
+  <article class="md:col-span-2 p-8 bg-app-card-light dark:bg-app-card-dark border-1 border-app-border-light dark:border-app-border-dark rounded-2xl flex flex-col justify-center shadow-lg">
+    <div class="font-mono text-[10px] text-p-amber-light dark:text-p-amber-dark mb-5 uppercase tracking-[0.2em]">Config.Toolbox</div>
+    <div class="flex flex-wrap gap-2.5">
+      {['C/C++ [EMBEDDED]', 'STM32', 'RTOS', 'Python', 'C#', 'Unity', 'OPC', 'Linux'].map(tech => (
+        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/50 border-1 border-slate-200 dark:border-slate-700/50 text-xs font-mono text-slate-700 dark:text-slate-300 rounded-lg hover:border-p-amber-light dark:hover:border-p-amber-dark transition-colors cursor-default">
+          {tech}
+        </span>
+      ))}
+    </div>
+  </article>
+
+  <!-- CONNECT (2x1) -->
+  <article class="md:col-span-2 p-8 bg-app-card-light dark:bg-app-card-dark border-1 border-app-border-light dark:border-app-border-dark rounded-2xl flex flex-col justify-center shadow-lg group hover:border-p-blue-light/30 dark:hover:border-p-blue-dark/30 transition-colors">
+    <div class="font-mono text-[10px] text-p-blue-light dark:text-p-blue-dark mb-5 uppercase tracking-[0.2em]">Network.Connect</div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <a href="mailto:hello@samuelcosta.me" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200 dark:hover:border-slate-700/50 transition-all group/link">
+        <div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/link:text-p-mint-light dark:group-hover/link:text-p-mint-dark transition-colors">
+          <Icon name="lucide:mail" class="w-5 h-5" />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs text-slate-500 font-mono">Email</span>
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-300 group-hover/link:text-p-mint-light dark:group-hover/link:text-p-mint-dark transition-colors">Hello@samuelcosta.me</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/samuelocosta" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200 dark:hover:border-slate-700/50 transition-all group/link">
+        <div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/link:text-slate-900 dark:group-hover/link:text-white transition-colors">
+          <Icon name="simple-icons:github" class="w-5 h-5" />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs text-slate-500 font-mono">GitHub</span>
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-300 group-hover/link:text-slate-900 dark:group-hover/link:text-white transition-colors">@samuelocosta</span>
+        </div>
+      </a>
+
+      <a href="https://linkedin.com/in/samuel-oliveira-costa-25388481/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200 dark:hover:border-slate-700/50 transition-all group/link">
+        <div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/link:text-[#0a66c2] transition-colors">
+          <Icon name="simple-icons:linkedin" class="w-5 h-5" />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs text-slate-500 font-mono">LinkedIn</span>
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-300 group-hover/link:text-[#0a66c2] transition-colors">Samuel Costa</span>
+        </div>
+      </a>
+
+      <a href="https://www.youtube.com/@samuelocosta" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200 dark:hover:border-slate-700/50 transition-all group/link">
+        <div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/link:text-[#ff0000] transition-colors">
+          <Icon name="simple-icons:youtube" class="w-5 h-5" />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs text-slate-500 font-mono">YouTube</span>
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-300 group-hover/link:text-[#ff0000] transition-colors">@samuelocosta</span>
+        </div>
+      </a>
+    </div>
+  </article>
+
+</section>

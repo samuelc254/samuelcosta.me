@@ -1,0 +1,58 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = "Samuel Costa // Software Engineer | Firmware, Embedded & Simulation" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR" class="antialiased">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<ViewTransitions />
+		<style is:global>
+			@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+			
+			:root {
+				--bg-pattern: rgba(30, 41, 59, 0.1);
+			}
+			.dark {
+				--bg-pattern: rgba(30, 41, 59, 0.4);
+			}
+
+			body {
+				background-image: radial-gradient(circle at center, var(--bg-pattern) 1px, transparent 1px);
+				background-size: 24px 24px;
+				scrollbar-width: thin;
+			}
+			
+			/* Custom scrollbar based on theme */
+			::-webkit-scrollbar { width: 8px; }
+			::-webkit-scrollbar-track { @apply bg-app-bg-light dark:bg-app-bg-dark; }
+			::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-800 rounded-full; }
+			
+			/* Typography contrast fixes */
+			.prose { @apply text-slate-700 dark:text-slate-300; }
+			.prose h1, .prose h2, .prose h3 { @apply text-slate-900 dark:text-slate-50; }
+		</style>
+	</head>
+	<body class="font-sans min-h-screen bg-app-bg-light dark:bg-app-bg-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+		
+		<ThemeToggle />
+
+		<!-- Top subtle glow - adjusted for theme -->
+		<div class="fixed top-0 inset-x-0 h-64 bg-gradient-to-b from-blue-500/5 dark:from-p-blue-dark/10 to-transparent pointer-events-none z-0"></div>
+
+		<slot />
+	</body>
+</html>
