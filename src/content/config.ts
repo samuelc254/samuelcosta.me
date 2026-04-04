@@ -11,6 +11,7 @@ const posts = defineCollection({
     tags: z.array(z.string()),
     category: z.enum(['project', 'post']),
     accentColor: z.string().default('mint'),
+    addIcon: z.string().optional(),
   }),
 });
 
