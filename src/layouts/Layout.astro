@@ -15,11 +15,74 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v1" />
+		<link id="site-favicon" rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		
+		<script is:inline>
+			const FAVICON_DARK = '/favicon.svg?v=2';
+			const FAVICON_LIGHT = '/favicon-light.svg?v=1';
+
+			const applyFavicon = (isDark) => {
+				const favicon = document.getElementById('site-favicon');
+				if (favicon) {
+					favicon.setAttribute('href', isDark ? FAVICON_DARK : FAVICON_LIGHT);
+				}
+			};
+
+			const theme = (() => {
+				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+					return localStorage.getItem('theme');
+				}
+				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+					return 'dark';
+				}
+				return 'light';
+			})();
+
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+
+			applyFavicon(theme === 'dark');
+
+			const faviconObserver = new MutationObserver(() => {
+				applyFavicon(document.documentElement.classList.contains('dark'));
+			});
+
+			faviconObserver.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ['class'],
+			});
+
+			document.addEventListener('astro:page-load', () => {
+				applyFavicon(document.documentElement.classList.contains('dark'));
+			});
+		</script>
+
 		<ViewTransitions />
+
+		<script is:inline>
+			document.addEventListener('astro:before-swap', (ev) => {
+				const isDark = document.documentElement.classList.contains('dark');
+
+				if (isDark) {
+					ev.newDocument.documentElement.classList.add('dark');
+				} else {
+					ev.newDocument.documentElement.classList.remove('dark');
+				}
+
+				const nextHref = isDark ? '/favicon.svg?v=2' : '/favicon-light.svg?v=1';
+				const newDocFavicon = ev.newDocument.getElementById('site-favicon');
+				if (newDocFavicon) {
+					newDocFavicon.setAttribute('href', nextHref);
+				}
+			});
+		</script>
+
 		<style is:global>
 			@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 			
@@ -46,7 +109,7 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 			.prose h1, .prose h2, .prose h3 { @apply text-slate-900 dark:text-slate-50; }
 		</style>
 	</head>
-	<body class="font-sans min-h-screen bg-app-bg-light dark:bg-app-bg-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+	<body class="font-sans min-h-screen bg-app-bg-light dark:bg-app-bg-dark text-slate-900 dark:text-slate-100">
 		
 		<ThemeToggle />
 
