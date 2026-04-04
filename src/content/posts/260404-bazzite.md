@@ -3,7 +3,6 @@ title: "Bazzite: De NAS a Desktop Gamer (e os perrengues do hardware)"
 description: "Minha transição do zimaOS para o Bazzite, resolvendo instabilidades de hardware e descobrindo o poder das distros atômicas."
 pubDate: 2026-04-04
 tags: ["Linux", "Bazzite", "Hardware", "Homelab"]
-category: "post"
 accentColor: "blue"
 ---
 

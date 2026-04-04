@@ -17,7 +17,6 @@ title: "Título"
 description: "Resumo rápido"
 pubDate: 2026-04-04
 tags: ["Tag1", "Tag2"]
-category: "post" # post ou project
 accentColor: "blue" # mint, amber, blue, peach
 addIcon: "pin" # Opcional: selo visual
 ---

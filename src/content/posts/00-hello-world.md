@@ -3,7 +3,6 @@ title: "Hello World"
 description: "O início de um diário de bordo sobre invenções, códigos e projetos novos."
 pubDate: 2026-04-01
 tags: ["Maker", "Projetos", "Dev"]
-category: "post"
 accentColor: "mint"
 addIcon: "pin"
 ---

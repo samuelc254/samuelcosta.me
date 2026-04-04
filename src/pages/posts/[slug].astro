@@ -12,6 +12,8 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+const formattedDate = post.data.pubDate.toISOString().split('T')[0].replace(/-/g, '/');
+const isNew = Date.now() - post.data.pubDate.getTime() < 7 * 24 * 60 * 60 * 1000;
 
 const accentText = {
   mint: 'text-p-mint-light dark:text-p-mint-dark',
@@ -21,17 +23,19 @@ const accentText = {
 }[post.data.accentColor as 'mint' | 'amber' | 'blue' | 'peach'] || 'text-p-mint-light dark:text-p-mint-dark';
 ---
 
-<Layout title={`${post.data.title} // Samuel Costa`} description={post.data.description}>
+<Layout title={`${post.data.title} // Samuel O. Costa`} description={post.data.description}>
   <main class="max-w-3xl mx-auto px-6 py-16 md:py-24">
     <article id="post-body">
       <header class="mb-12 border-b border-app-border-light dark:border-app-border-dark pb-10">
-        <div class="flex items-center gap-4 mb-8">
-          <div class={`font-mono text-[10px] uppercase tracking-[0.3em] bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-md border-1 border-slate-200 dark:border-slate-800 ${accentText} font-bold`}>
-            {post.data.category}
-          </div>
-          <time class="font-mono text-[10px] text-slate-500 dark:text-slate-500 tracking-[0.2em] font-medium">
-            {post.data.pubDate.toISOString().split('T')[0]}
+        <div class="flex items-center gap-2 flex-wrap mb-8">
+          <time class={`font-mono text-[10px] uppercase tracking-[0.3em] bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-md border-1 border-slate-200 dark:border-slate-800 ${accentText} font-bold`}>
+            {formattedDate}
           </time>
+          {isNew && (
+            <span class="font-mono text-[10px] uppercase tracking-[0.3em] bg-blue-500/10 dark:bg-blue-400/10 px-3 py-1.5 rounded-md border-1 border-blue-500/20 dark:border-blue-400/20 text-blue-600 dark:text-blue-300 font-bold">
+              new
+            </span>
+          )}
         </div>
         
         <h1 class={`text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.1] tracking-tight text-slate-900 dark:text-slate-50`}>
