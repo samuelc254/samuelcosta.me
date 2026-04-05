@@ -1,4 +1,4 @@
-# samuelcosta.me 
+# [samuelcosta.me](https://samuelcosta.me)
 
 Este é o meu playground. Um diário para documentar o que eu invento nos finais de semana, de robótica a homelabs.
 
