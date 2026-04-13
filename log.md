@@ -218,3 +218,10 @@
 - **Change:** Restored the social/network badges in the hero using inline SVGs instead of text-only placeholders.
 - **Reason:** Kept the UI visually richer without reintroducing the icon dependency that had been removed during the SSR cleanup.
 - **Validation:** Build remained successful after the icon polish.
+
+### [2026-04-12] Professional SEO Hardening
+- **Head SEO:** Centralized canonical, robots directives, Open Graph, Twitter Card, and article metadata in `Layout.astro` with per-page props.
+- **Structured Data:** Added base JSON-LD (`WebSite` + `Person`) and page-level JSON-LD for Home (`Blog` + `ItemList`) and Post pages (`BlogPosting`).
+- **Crawler Access:** Added `public/robots.txt` with explicit sitemap discovery endpoint.
+- **Sitemap:** Implemented `src/pages/sitemap.xml.ts` to generate XML with escaped URLs and `lastmod` based on content timestamps.
+- **Validation:** Ran `npx astro check` (no errors/warnings) and `npm run build` successfully after SEO changes.

@@ -16,9 +16,52 @@ const sortedPosts = posts.sort((a, b) => {
 
 	return b.id.localeCompare(a.id);
 });
+
+const siteUrl = 'https://samuelcosta.me';
+
+const homeJsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Blog',
+		name: 'Samuel O. Costa - Stream Logs',
+		description:
+			'Diario tecnico e pessoal com projetos de hardware, software, simulacao e experimentos de final de semana.',
+		url: siteUrl,
+		inLanguage: 'pt-BR',
+		author: {
+			'@type': 'Person',
+			name: 'Samuel O. Costa',
+		},
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'ItemList',
+		name: 'Posts mais recentes',
+		itemListElement: sortedPosts.slice(0, 20).map((post, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			url: `${siteUrl}/posts/${post.id.replace(/\.(md|mdx)$/i, '')}`,
+			name: post.data.title,
+		})),
+	},
+];
 ---
 
-<Layout title="Samuel O. Costa">
+<Layout
+	title="Samuel O. Costa | Projetos de Hardware e Software"
+	description="Diario de projetos de Samuel O. Costa com foco em sistemas embarcados, C#, Python, hardware, simulacao e experimentos de final de semana."
+	keywords={[
+		'Samuel O. Costa',
+		'sistemas embarcados',
+		'Python',
+		'C#',
+		'hardware',
+		'simulacao',
+		'maker',
+		'blog tecnico',
+	]}
+	jsonLd={homeJsonLd}
+>
 	<main class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 md:py-24 z-10 relative">
 		
 		<BentoHeader />

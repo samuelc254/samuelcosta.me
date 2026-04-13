@@ -14,6 +14,31 @@ export async function getStaticPaths() {
 const { post } = Astro.props as { post: CollectionEntry<'posts'> };
 const { Content } = await render(post);
 const formattedDate = post.data.pubDate.toISOString().split('T')[0].replace(/-/g, '/');
+const postSlug = post.id.replace(/\.(md|mdx)$/i, '');
+const postUrl = `https://samuelcosta.me/posts/${postSlug}`;
+const postPublished = post.data.pubDate.toISOString();
+const postModified = (post.data.updatedDate ?? post.data.pubDate).toISOString();
+
+const postJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: postPublished,
+  dateModified: postModified,
+  mainEntityOfPage: postUrl,
+  url: postUrl,
+  author: {
+    '@type': 'Person',
+    name: 'Samuel O. Costa',
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'Samuel O. Costa',
+  },
+  keywords: post.data.tags,
+  inLanguage: 'pt-BR',
+};
 
 const accentText = {
   mint: 'text-p-mint-light dark:text-p-mint-dark',
@@ -23,7 +48,15 @@ const accentText = {
 }[post.data.accentColor as 'mint' | 'amber' | 'blue' | 'peach'] || 'text-p-mint-light dark:text-p-mint-dark';
 ---
 
-<Layout title={`${post.data.title} // Samuel O. Costa`} description={post.data.description}>
+<Layout
+  title={`${post.data.title} | Samuel O. Costa`}
+  description={post.data.description}
+  type="article"
+  publishedTime={postPublished}
+  modifiedTime={postModified}
+  keywords={post.data.tags}
+  jsonLd={postJsonLd}
+>
   <main class="max-w-3xl mx-auto px-6 py-16 md:py-24">
     <article id="post-body">
       <header class="mb-12 border-b border-app-border-light dark:border-app-border-dark pb-10">
