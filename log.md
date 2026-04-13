@@ -165,3 +165,56 @@
 - **Implemented:** Non-pinned posts are now ordered by `pubDate` descending (newest to oldest).
 - **Stability:** Added deterministic tie-breaker by `id` to avoid random ordering when dates match.
 - **Result:** Feed now reflects recency while preserving manual editorial control via pinning.
+
+### [2026-04-12] Security Track: Astro 6 + Cloudflare 13 Migration
+- **Decision:** Applied the definitive remediation path by upgrading runtime stack to **Astro 6** and **@astrojs/cloudflare 13**.
+- **Dependency Upgrade:** Updated `astro`, `@astrojs/cloudflare`, and `@astrojs/mdx` to versions compatible with the new Cloudflare adapter model.
+- **Config Migration:** Moved content config from `src/content/config.ts` to `src/content.config.ts` with loader-based collections (`glob`) required by Astro 6.
+- **Routing Compatibility:** Replaced legacy `post.slug` assumptions with id-derived slug generation for loader-based entries.
+- **Rendering Compatibility:** Updated post rendering from `post.render()` to `render(post)` per Astro 6 content API.
+- **Transitions Migration:** Replaced `ViewTransitions` with `ClientRouter` in layout to satisfy Astro 6 transition exports.
+- **Cloudflare Config Fix:** Removed stale `main` entry from `wrangler.jsonc` that pointed to obsolete worker output.
+- **Content Integrity Fix:** Restored missing frontmatter in `260412-llama.cpp.md` to satisfy schema validation.
+- **Validation:** `npm run build` completed successfully after migration.
+- **Security Outcome:** `npm audit --omit=dev` now reports **0 vulnerabilities** in production dependencies.
+- **Residual Note:** Full `npm audit` still flags moderate issues in development tooling chain tied to `@astrojs/check` (YAML language-server path), not runtime.
+
+### [2026-04-12] Tailwind Compatibility Finalization (Astro 6)
+- **Issue:** `npm install` failed with `ERESOLVE` because `@astrojs/tailwind@6.0.2` only supports Astro `^3 || ^4 || ^5`.
+- **Fix:** Removed `@astrojs/tailwind` integration from `astro.config.mjs` and switched to standard Tailwind pipeline via `postcss.config.cjs`.
+- **Fix:** Added `src/styles/global.css` with Tailwind directives and imported it in `Layout.astro`.
+- **Config Cleanup:** Updated `tailwind.config.mjs` to valid ESM syntax and preserved `@tailwindcss/typography` plugin.
+- **Validation:** `npm install` now completes without peer conflict and `npm run build` succeeds.
+- **Security Check:** `npm audit --omit=dev` remains at **0 vulnerabilities**.
+
+### [2026-04-12] Dev Server Stability Fix
+- **Issue:** `astro dev` was failing after optimizer reloads with missing Vite SSR chunks and `module is not defined` errors.
+- **Fix:** Added explicit `vite.optimizeDeps.exclude` entries for `astro/zod` and `astro/virtual-modules/transitions.js` in `astro.config.mjs`.
+- **Cleanup:** Cleared `node_modules/.vite` and `.astro` caches before restarting the dev server.
+- **Validation:** Local dev server now starts cleanly at `http://localhost:4321/` without the previous optimizer crash.
+
+### [2026-04-12] Dev Cache Reset Confirmation
+- **Observation:** A fully clean restart after deleting `node_modules/.vite`, `.astro`, and `dist` removed the lingering SSR `module is not defined` failure.
+- **Conclusion:** The issue was a stale optimized-dependency/cache state, not a permanent code defect in the migrated Astro 6 stack.
+- **Validation:** Fresh `astro dev --host` booted successfully and served the site normally again.
+
+### [2026-04-12] Legacy Content Config Removal
+- **Issue:** A stale legacy content config file still existed at `src/content/config.ts` alongside the new Astro 6 loader config.
+- **Fix:** Removed the legacy file so only `src/content.config.ts` remains active.
+- **Result:** The build and dev server now run cleanly with the loader-based content setup and a fresh `astro dev --host --port 4321` boot.
+
+### [2026-04-12] Vulnerability Remediation Challenge
+- **Problem:** `npm audit` reported vulnerabilities through development tooling, while production stayed clean.
+- **Initial Fixes:** Migrated the project to Astro 6 and `@astrojs/cloudflare` 13 to eliminate the vulnerable Cloudflare adapter chain that was pulling old `wrangler`, `miniflare`, and `undici` versions.
+- **Tailwind Migration:** Removed the incompatible `@astrojs/tailwind` integration and switched to a standard Tailwind + PostCSS setup so installs would work without peer-resolution conflicts.
+- **Content Migration:** Converted legacy content collections to the Astro 6 loader-based format and removed the leftover `src/content/config.ts` file.
+- **Runtime Cleanup:** Replaced `ViewTransitions` with `ClientRouter`, updated post rendering to the Astro 6 API, and cleared stale Vite/Astro caches whenever the dev runner got stuck on optimized chunks.
+- **UI Simplification:** Removed `astro-icon` from the SSR render path and replaced the few remaining icons with inline, dependency-free markup to reduce the amount of third-party code entering the dev runner.
+- **Validation:** Confirmed `npm install` works, `npm run build` succeeds, and `npm audit --omit=dev` reports **0 vulnerabilities**.
+- **Dev Stability:** After repeated optimize-deps cache issues, a clean restart of `astro dev` on `http://localhost:4321/` restored the site and removed the `module is not defined` failure.
+- **Outcome:** The repo is now stable, production is clean, and the dev server runs normally after the migration and cache reset.
+
+### [2026-04-12] Network Icon Polish
+- **Change:** Restored the social/network badges in the hero using inline SVGs instead of text-only placeholders.
+- **Reason:** Kept the UI visually richer without reintroducing the icon dependency that had been removed during the SSR cleanup.
+- **Validation:** Build remained successful after the icon polish.

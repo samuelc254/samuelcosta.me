@@ -1,8 +1,8 @@
 ---
-import { Icon } from 'astro-icon/components';
 import NewBadge from './NewBadge.astro';
 const { post, class: className = '' } = Astro.props;
 const { title, description, tags, accentColor, pubDate, addIcon } = post.data;
+const postSlug = post.id.replace(/\.(md|mdx)$/i, '');
 
 // Format date to yyyy/mm/dd
 const formattedDate = pubDate.toISOString().split('T')[0].replace(/-/g, '/');
@@ -23,14 +23,14 @@ const textAccentClass = {
 ---
 
 <div class={`group cursor-pointer ${className}`}>
-  <a href={`/posts/${post.slug}`} class="block outline-none focus-visible:ring-2 focus-visible:ring-p-mint-light dark:focus-visible:ring-p-mint-dark rounded-2xl">
+  <a href={`/posts/${postSlug}`} class="block outline-none focus-visible:ring-2 focus-visible:ring-p-mint-light dark:focus-visible:ring-p-mint-dark rounded-2xl">
     <article class={`relative bg-app-card-light dark:bg-app-card-dark border-1 rounded-2xl p-7 md:p-8 transition-all duration-500 ease-out transform group-hover:-translate-y-1 ${accentClass} hover:shadow-2xl overflow-hidden`}>
       
       <header class="flex justify-between items-start mb-5">
         <div class="flex items-center gap-2 flex-wrap">
           {addIcon === 'pin' && (
             <div class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-p-amber-light/10 dark:bg-p-amber-dark/10 border-1 border-p-amber-light/20 dark:border-p-amber-dark/20">
-              <Icon name="lucide:pin" class="w-3 h-3 text-p-amber-light dark:text-p-amber-dark" />
+              <span class="font-mono text-[9px] font-bold text-p-amber-light dark:text-p-amber-dark">PIN</span>
               <span class="font-mono text-[9px] uppercase tracking-wider text-p-amber-light dark:text-p-amber-dark font-bold">Pinado</span>
             </div>
           )}

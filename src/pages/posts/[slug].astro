@@ -1,18 +1,18 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import NewBadge from '../../components/NewBadge.astro';
 
 export async function getStaticPaths() {
   const posts: CollectionEntry<'posts'>[] = await getCollection('posts');
   return posts.map((post: CollectionEntry<'posts'>) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id.replace(/\.(md|mdx)$/i, '') },
     props: { post },
   }));
 }
 
 const { post } = Astro.props as { post: CollectionEntry<'posts'> };
-const { Content } = await post.render();
+const { Content } = await render(post);
 const formattedDate = post.data.pubDate.toISOString().split('T')[0].replace(/-/g, '/');
 
 const accentText = {

@@ -1,6 +1,7 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css';
 
 interface Props {
 	title: string;
@@ -79,7 +80,7 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 			});
 		</script>
 
-		<ViewTransitions />
+		<ClientRouter />
 
 		<script is:inline>
 			document.addEventListener('astro:before-swap', (ev) => {
