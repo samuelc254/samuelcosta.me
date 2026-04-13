@@ -1,12 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import BentoHeader from '../components/BentoHeader.astro';
 import PostCard from '../components/PostCard.astro';
 
-const posts = await getCollection('posts');
+const posts: CollectionEntry<'posts'>[] = await getCollection('posts');
 const sortedPosts = posts.sort((a, b) => a.id.localeCompare(b.id));
-const BATCH_SIZE = 12;
 ---
 
 <Layout title="Samuel O. Costa">
@@ -38,11 +37,10 @@ const BATCH_SIZE = 12;
 		</div>
 	</main>
 
-	<script>
+	<script is:inline define:vars={{ feedBatchSize: 12 }}>
 		document.addEventListener('astro:page-load', () => {
 			if (window.location.pathname !== '/') return;
 
-			const BATCH_SIZE = 12;
 			const SCROLL_STATE_KEY = 'samuelcosta-scroll-y';
 			const loader = document.getElementById('loader');
 			const loaderSpinner = document.getElementById('loader-spinner');
@@ -63,7 +61,7 @@ const BATCH_SIZE = 12;
 			});
 
 			const revealBatch = () => {
-				const nextBatch = items.slice(loadedCount, loadedCount + BATCH_SIZE);
+				const nextBatch = items.slice(loadedCount, loadedCount + feedBatchSize);
 				nextBatch.forEach((item, idx) => {
 					item.classList.remove('hidden');
 					setTimeout(() => {

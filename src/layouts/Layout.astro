@@ -31,6 +31,20 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 				}
 			};
 
+			const syncNewPostBadges = () => {
+				const now = Date.now();
+				const badges = document.querySelectorAll('[data-post-new-badge]');
+
+				badges.forEach((badge) => {
+					const publishedAt = Date.parse(badge.getAttribute('data-pub-date') || '');
+					const windowDays = Number(badge.getAttribute('data-new-window-days') || '7');
+					const isNew = Number.isFinite(publishedAt) && now - publishedAt < windowDays * 24 * 60 * 60 * 1000;
+
+					badge.hidden = !isNew;
+					badge.setAttribute('aria-hidden', String(!isNew));
+				});
+			};
+
 			const theme = (() => {
 				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
 					return localStorage.getItem('theme');
@@ -48,6 +62,7 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 			}
 
 			applyFavicon(theme === 'dark');
+			syncNewPostBadges();
 
 			const faviconObserver = new MutationObserver(() => {
 				applyFavicon(document.documentElement.classList.contains('dark'));
@@ -60,6 +75,7 @@ const { title, description = "Samuel O. Costa // Software Engineer | Firmware, E
 
 			document.addEventListener('astro:page-load', () => {
 				applyFavicon(document.documentElement.classList.contains('dark'));
+				syncNewPostBadges();
 			});
 		</script>
 
